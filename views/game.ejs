@@ -93,19 +93,19 @@
                                 MapCoordinateY -= MovementAmount;
                                 break;
                             case 2:
-                            if (MovementCheck(2) == 2) {
+                                if (MovementCheck(2) == 2) {
                                     break;
                                 }
                                 MapCoordinateY += MovementAmount;
                                 break;
                             case 3:
-                            if (MovementCheck(3) == 3) {
+                                if (MovementCheck(3) == 3) {
                                     break;
                                 }
                                 MapCoordinateX -= MovementAmount;
                                 break;
                             case 4:
-                            if (MovementCheck(4) == 4) {
+                                if (MovementCheck(4) == 4) {
                                     break;
                                 }
                                 MapCoordinateX += MovementAmount;
@@ -130,7 +130,7 @@
                                 TimerCheckRight = setInterval(Move, Delay, 4);
                             }
                         } else if (Key.which == 90) {
-                            alert(`${PlayerCoordinateX} ${PlayerCoordinateY} ${MapCoordinateX} ${MapCoordinateY}`);
+                            alert(`${WindowWidth} ${WindowHeight}`);
                         }
                     });
 
@@ -149,7 +149,15 @@
                             TimerCheckRight = null;
                         } else if (Key.which == 90) {
                             //Use();
+                        } else if (Key.which == 85) {
+                            // document.getElementById("GameArea").requestFullscreen();
+                            // // document.location.reload(true);
+                            // let WindowHeight = $(window).height();
+                            // let WindowWidth = $(window).width();
+                            // resize();
+                            // GameMap.src = '/images/Map.png';                             // FIX FULLSCREEN
                         }
+                        // alert(Key.which);
                     });
 
 
