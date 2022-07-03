@@ -1,0 +1,32 @@
+<html>
+
+<% include ./partials/header %>
+
+    <body>
+        <% include ./partials/navbar %>
+            <% include ./partials/scripts %>
+
+                <canvas id="GameArea"></canvas>
+
+                <script>
+                    let WindowHeight = $(window).height();
+                    let WindowWidth = $(window).width();
+                    $("#GameArea").height(WindowHeight);
+                    $("#GameArea").width(WindowWidth);
+
+                    // $(window).resize(function () {
+                    //     WindowHeight = $("#GameArea").height();
+                    //     WindowWidth = $("#GameArea").width();
+                    //     $("#GameArea").height(WindowHeight);
+                    //     $("#GameArea").width(WindowWidth);
+                    // });
+
+                    var GameAreaSelector = document.getElementById("GameArea");
+                    var game = GameAreaSelector.getContext("2d");
+                    game.fillStyle = "#000000";
+                    game.fillRect(-1000, 0, WindowHeight, WindowHeight);
+
+                </script>
+    </body>
+
+</html>
