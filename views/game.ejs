@@ -27,6 +27,8 @@
                     let TimerCheckRight = null;
                     let MovementAmount = 2;
                     let Delay = 8;
+                    let MousePositionX = WindowWidth / 2;
+                    let MousePositionY = WindowHeight / 2;
 
 
 
@@ -45,9 +47,12 @@
 
                     function resize() {
                         GameAreaSelector.width = window.innerWidth;
+                        WindowWidth = window.innerWidth;
                         GameAreaSelector.height = window.innerHeight;
+                        WindowHeight = window.innerHeight;
                         XOffset = WindowWidth / 2;
                         YOffset = WindowHeight / 2;
+
                     }
 
                     resize()
@@ -57,7 +62,7 @@
                         game.fillStyle = "#654987";
                         game.fillRect(-1000, -1000, 10000, 10000);
                         game.drawImage(GameMap, MapCoordinateX, MapCoordinateY, WindowWidth, WindowHeight, 0, 0, WindowWidth, WindowHeight);
-                    };
+                    }
 
                     GameMap.src = '/images/Map.png';
 
@@ -66,16 +71,8 @@
                         game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
                     }
 
-                    function MovementCheck() {
-                        if (PlayerCoordinateY <= 0) {
-                            return 1;
-                        } else if (PlayerCoordinateY >= MapSizeY) {
-                            return 2;
-                        } else if (PlayerCoordinateX <= 0) {
-                            return 3;
-                        } else if (PlayerCoordinateX >= MapSizeX) {
-                            return 4;
-                        }
+                    function GetAngle(PointX, PointY, PlayerX, PlayerY) {
+                        return Math.atan2(PointY - PlayerY, PointX - PlayerX) * 180 / Math.PI;
                     }
 
                     function SyncPlayerCoordinates() {
@@ -84,48 +81,46 @@
                     }
 
                     function Move(Direction) {
+                        // console.log(`${PlayerCoordinateX} ${PlayerCoordinateY} ${MapSizeX} ${MapSizeY}`);
                         SyncPlayerCoordinates();
                         switch (Direction) {
                             case 1:
-                                if (MovementCheck(1) == 1) {
-                                    break;
+                                if (PlayerCoordinateY >= 0) {
+                                    MapCoordinateY -= MovementAmount;
                                 }
-                                MapCoordinateY -= MovementAmount;
                                 break;
                             case 2:
-                                if (MovementCheck(2) == 2) {
-                                    break;
+                                if (PlayerCoordinateY <= MapSizeY) {
+                                    MapCoordinateY += MovementAmount;
                                 }
-                                MapCoordinateY += MovementAmount;
                                 break;
                             case 3:
-                                if (MovementCheck(3) == 3) {
-                                    break;
+                                if (PlayerCoordinateX >= 0) {
+                                    MapCoordinateX -= MovementAmount;
                                 }
-                                MapCoordinateX -= MovementAmount;
                                 break;
                             case 4:
-                                if (MovementCheck(4) == 4) {
-                                    break;
+                                if (PlayerCoordinateX <= MapSizeX) {
+                                    MapCoordinateX += MovementAmount;
                                 }
-                                MapCoordinateX += MovementAmount;
+                                break;
                         }
                     }
 
                     $("body").keydown(function (Key) {
-                        if (Key.which == 38) {
+                        if (Key.which == 87) {
                             if (TimerCheckUp == null) {
                                 TimerCheckUp = setInterval(Move, Delay, 1);
                             }
-                        } else if (Key.which == 40) {
+                        } else if (Key.which == 83) {
                             if (TimerCheckDown == null) {
                                 TimerCheckDown = setInterval(Move, Delay, 2);
                             }
-                        } else if (Key.which == 37) {
+                        } else if (Key.which == 65) {
                             if (TimerCheckLeft == null) {
                                 TimerCheckLeft = setInterval(Move, Delay, 3);
                             }
-                        } else if (Key.which == 39) {
+                        } else if (Key.which == 68) {
                             if (TimerCheckRight == null) {
                                 TimerCheckRight = setInterval(Move, Delay, 4);
                             }
@@ -135,32 +130,47 @@
                     });
 
                     $("body").keyup(function (Key) {
-                        if (Key.which == 38) {
+                        if (Key.which == 87) {
                             clearInterval(TimerCheckUp);
                             TimerCheckUp = null;
-                        } else if (Key.which == 40) {
+                        } else if (Key.which == 83) {
                             clearInterval(TimerCheckDown);
                             TimerCheckDown = null;
-                        } else if (Key.which == 37) {
+                        } else if (Key.which == 65) {
                             clearInterval(TimerCheckLeft);
                             TimerCheckLeft = null;
-                        } else if (Key.which == 39) {
+                        } else if (Key.which == 68) {
                             clearInterval(TimerCheckRight);
                             TimerCheckRight = null;
                         } else if (Key.which == 90) {
                             //Use();
                         } else if (Key.which == 85) {
-                            // document.getElementById("GameArea").requestFullscreen();
-                            // // document.location.reload(true);
-                            // let WindowHeight = $(window).height();
-                            // let WindowWidth = $(window).width();
-                            // resize();
-                            // GameMap.src = '/images/Map.png';                             // FIX FULLSCREEN
+                            document.getElementById("GameArea").requestFullscreen();
                         }
                         // alert(Key.which);
                     });
 
+                    $('#GameArea').mousedown(function (event) {
+                        switch (event.which) {
+                            case 1:
+                                // alert('Left Mouse button pressed.');
+                                break;
+                            case 2:
+                                // alert('Middle Mouse button pressed.');
+                                break;
+                            case 3:
+                                // alert('Right Mouse button pressed.');
+                                break;
+                            default:
+                            // alert('You have a strange Mouse!');
+                        }
+                    });
 
+                    $("#GameArea").mousemove(function (event) {
+                        MousePositionX = event.pageX - $(this).offset().left;
+                        MousePositionY = event.pageY - $(this).offset().top;
+                        console.log(`${GetAngle(MousePositionX, MousePositionY, PlayerCoordinateX, PlayerCoordinateY)}`);
+                    });
 
                 </script>
     </body>
