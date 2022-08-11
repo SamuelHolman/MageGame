@@ -29,8 +29,10 @@
                     let Delay = 8;
                     let MousePositionX = WindowWidth / 2;
                     let MousePositionY = WindowHeight / 2;
+                    let IsPlayerMoving = false;
 
 
+                    document.addEventListener('contextmenu', event => event.preventDefault());
 
                     var GameAreaSelector = document.getElementById("GameArea");
                     var game = GameAreaSelector.getContext("2d");
@@ -38,11 +40,42 @@
                     window.requestAnimationFrame(GameFrame);
 
                     GameMap = new Image();
+                    Player = new Image();
 
                     function GameFrame() {
                         GameMap.src = '/images/Map.png';
-                        RenderPlayer();
+                        RenderObjects();
+                        AnimateStaticPlayer();
                         window.requestAnimationFrame(GameFrame);
+                    }
+
+                    let PlayerStillAnimationTimer = null;
+                    let PlayerStaticAnimation = "Down";
+
+                    function AnimateStaticPlayer() {
+                        if (TimerCheckUp == null && TimerCheckDown == null && TimerCheckLeft == null && TimerCheckRight == null) {
+                            IsPlayerMoving = false;
+                        } else {
+                            IsPlayerMoving = true;
+                            PlayerStillAnimationTimer = null;
+                            PlayerStaticAnimation = "Moving";
+                        }
+                        if (IsPlayerMoving == false) {
+                            if (PlayerStillAnimationTimer == null) {
+                                PlayerStillAnimationTimer = setTimeout(PlayerAnimate, 750);
+                            }
+                        } else if (IsPlayerMoving == true) {
+                            clearInterval(PlayerStillAnimationTimer);
+                        }
+                    }
+
+                    function PlayerAnimate() {
+                        if (PlayerStaticAnimation == "Down") {
+                            PlayerStaticAnimation = "Up";
+                        } else if (PlayerStaticAnimation = "Up") {
+                            PlayerStaticAnimation = "Down";
+                        }
+                        PlayerStillAnimationTimer = null;
                     }
 
                     function resize() {
@@ -52,7 +85,6 @@
                         WindowHeight = window.innerHeight;
                         XOffset = WindowWidth / 2;
                         YOffset = WindowHeight / 2;
-
                     }
 
                     resize()
@@ -64,12 +96,35 @@
                         game.drawImage(GameMap, MapCoordinateX, MapCoordinateY, WindowWidth, WindowHeight, 0, 0, WindowWidth, WindowHeight);
                     }
 
+                    Player.onload = function () {
+                        game.drawImage(Player, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                    }
+
                     GameMap.src = '/images/Map.png';
 
-                    function RenderPlayer() {
-                        game.fillStyle = "#999999";
-                        game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
+                    function RenderObjects() {
+                        if (PlayerStaticAnimation == "Up") {
+                            // game.fillStyle = "#999999";
+                            // game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
+                            Player.src = '/images/TestCharacters/LongLegs/LongLeggedUp.png';
+                        } else if (PlayerStaticAnimation == "Down") {
+                            // game.fillStyle = "#111111";
+                            // game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
+                            Player.src = '/images/TestCharacters/LongLegs/LongLeggedDown.png';
+                        } else {
+                            game.fillStyle = "#111111";
+                            game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
+                        }
+
+
+
+                        game.fillStyle = "#123456";
+                        game.fillRect(500 - MapCoordinateX, 500 - MapCoordinateY, PlayerXSize, PlayerYSize);
+                        game.fillStyle = "#654321";
+                        game.fillRect(5000 - MapCoordinateX, 5000 - MapCoordinateY, PlayerXSize, PlayerYSize);
                     }
+
+
 
                     function GetAngle(PointX, PointY, PlayerX, PlayerY) {
                         return Math.atan2(PointY - PlayerY, PointX - PlayerX) * 180 / Math.PI;
@@ -154,12 +209,14 @@
                         switch (event.which) {
                             case 1:
                                 // alert('Left Mouse button pressed.');
+                                alert(`${MousePositionX}, ${MousePositionY}`);
                                 break;
                             case 2:
                                 // alert('Middle Mouse button pressed.');
                                 break;
                             case 3:
                                 // alert('Right Mouse button pressed.');
+                                alert(`${MousePositionX + MapCoordinateX}, ${MousePositionY + MapCoordinateY}`);
                                 break;
                             default:
                             // alert('You have a strange Mouse!');
