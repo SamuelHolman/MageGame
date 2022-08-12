@@ -11,12 +11,12 @@
                 <script>
                     let WindowHeight = $(window).height();
                     let WindowWidth = $(window).width();
-                    let MapCoordinateX = 0;
-                    let MapCoordinateY = 0;
+                    let MapCoordinateX = 1000;
+                    let MapCoordinateY = 1000;
                     let PlayerXSize = 50;
                     let PlayerYSize = 50;
-                    let MapSizeX = 8783;
-                    let MapSizeY = 8783;
+                    let MapSizeX = 10000;
+                    let MapSizeY = 10000;
                     let XOffset = WindowWidth / 2;
                     let YOffset = WindowHeight / 2;
                     let PlayerCoordinateX = MapCoordinateX + XOffset;
@@ -30,6 +30,21 @@
                     let MousePositionX = WindowWidth / 2;
                     let MousePositionY = WindowHeight / 2;
                     let IsPlayerMoving = false;
+                    let PlayerMapSquareCoordinateX;
+                    let PlayerMapSquareCoordinateY;
+
+                    let MapMovement = [
+                        [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    ]
 
 
                     document.addEventListener('contextmenu', event => event.preventDefault());
@@ -41,41 +56,19 @@
 
                     GameMap = new Image();
                     Player = new Image();
+                    Kaiju = new Image();
 
                     function GameFrame() {
                         GameMap.src = '/images/Map.png';
                         RenderObjects();
-                        AnimateStaticPlayer();
                         window.requestAnimationFrame(GameFrame);
                     }
 
-                    let PlayerStillAnimationTimer = null;
-                    let PlayerStaticAnimation = "Down";
-
-                    function AnimateStaticPlayer() {
-                        if (TimerCheckUp == null && TimerCheckDown == null && TimerCheckLeft == null && TimerCheckRight == null) {
-                            IsPlayerMoving = false;
-                        } else {
-                            IsPlayerMoving = true;
-                            PlayerStillAnimationTimer = null;
-                            PlayerStaticAnimation = "Moving";
-                        }
-                        if (IsPlayerMoving == false) {
-                            if (PlayerStillAnimationTimer == null) {
-                                PlayerStillAnimationTimer = setTimeout(PlayerAnimate, 750);
-                            }
-                        } else if (IsPlayerMoving == true) {
-                            clearInterval(PlayerStillAnimationTimer);
-                        }
-                    }
+                    let PlayerStaticAnimation = true;
+                    PlayerStillAnimationTimer = setInterval(PlayerAnimate, 750);
 
                     function PlayerAnimate() {
-                        if (PlayerStaticAnimation == "Down") {
-                            PlayerStaticAnimation = "Up";
-                        } else if (PlayerStaticAnimation = "Up") {
-                            PlayerStaticAnimation = "Down";
-                        }
-                        PlayerStillAnimationTimer = null;
+                        PlayerStaticAnimation = !PlayerStaticAnimation;
                     }
 
                     function resize() {
@@ -92,31 +85,41 @@
 
                     GameMap.onload = function () {
                         game.fillStyle = "#654987";
-                        game.fillRect(-1000, -1000, 10000, 10000);
+                        game.fillRect(-1000, -1000, MapSizeX + 1000, MapSizeY + 1000);
                         game.drawImage(GameMap, MapCoordinateX, MapCoordinateY, WindowWidth, WindowHeight, 0, 0, WindowWidth, WindowHeight);
                     }
 
                     Player.onload = function () {
-                        game.drawImage(Player, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                        // game.drawImage(Player, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                        if (PlayerStaticAnimation) {
+                            if (IsPlayerMoving) {
+                                game.drawImage(Player, 0, 0, 125, 250, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                            } else {
+                                game.drawImage(Player, 0, 0, 250, 125, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                            }
+                        } else if (!PlayerStaticAnimation) {
+                            if (IsPlayerMoving) {
+                                game.drawImage(Player, 125, 0, 125, 250, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                            } else {
+                                game.drawImage(Player, 0, 125, 250, 125, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                            }
+                        }
+                    }
+
+                    Kaiju.onload = function () {
+                        LocationsX = [100, 200, 300, 400, 500, 600, 700, 800];
+                        LocationsY = [100, 200, 300, 400, 500, 600, 700, 800];
+                        for (i = 0; i < 8; i++) {
+                            game.drawImage(Kaiju, LocationsX[i] - MapCoordinateX, LocationsY[i] - MapCoordinateY, 100, 100);
+                        }
                     }
 
                     GameMap.src = '/images/Map.png';
 
+
                     function RenderObjects() {
-                        if (PlayerStaticAnimation == "Up") {
-                            // game.fillStyle = "#999999";
-                            // game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
-                            Player.src = '/images/TestCharacters/LongLegs/LongLeggedUp.png';
-                        } else if (PlayerStaticAnimation == "Down") {
-                            // game.fillStyle = "#111111";
-                            // game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
-                            Player.src = '/images/TestCharacters/LongLegs/LongLeggedDown.png';
-                        } else {
-                            game.fillStyle = "#111111";
-                            game.fillRect(WindowWidth / 2 - 25, WindowHeight / 2 - 25, PlayerXSize, PlayerYSize);
-                        }
-
-
+                        Player.src = '/images/TestCharacters/LongLegs/LongLeggedUp.png';
+                        Kaiju.src = '/images/PlanetSnail.png';
 
                         game.fillStyle = "#123456";
                         game.fillRect(500 - MapCoordinateX, 500 - MapCoordinateY, PlayerXSize, PlayerYSize);
@@ -135,8 +138,21 @@
                         PlayerCoordinateY = MapCoordinateY + YOffset;
                     }
 
+                    function FindCoordinate() {
+                        PlayerMapSquareCoordinateX = (PlayerCoordinateX - PlayerCoordinateX % 1000) / 1000;
+                    }
+
+                    function CheckMovement() {
+                        PlayerMapSquareCoordinateX = (PlayerCoordinateX - PlayerCoordinateX % 1000) / 1000;
+                        PlayerMapSquareCoordinateY = (PlayerCoordinateY - PlayerCoordinateY % 1000) / 1000;
+                        // if () {
+
+                        // }
+                    }
+
                     function Move(Direction) {
                         // console.log(`${PlayerCoordinateX} ${PlayerCoordinateY} ${MapSizeX} ${MapSizeY}`);
+                        IsPlayerMoving = true;
                         SyncPlayerCoordinates();
                         switch (Direction) {
                             case 1:
@@ -188,15 +204,19 @@
                         if (Key.which == 87) {
                             clearInterval(TimerCheckUp);
                             TimerCheckUp = null;
+                            IsPlayerMoving = false;
                         } else if (Key.which == 83) {
                             clearInterval(TimerCheckDown);
                             TimerCheckDown = null;
+                            IsPlayerMoving = false;
                         } else if (Key.which == 65) {
                             clearInterval(TimerCheckLeft);
                             TimerCheckLeft = null;
+                            IsPlayerMoving = false;
                         } else if (Key.which == 68) {
                             clearInterval(TimerCheckRight);
                             TimerCheckRight = null;
+                            IsPlayerMoving = false;
                         } else if (Key.which == 90) {
                             //Use();
                         } else if (Key.which == 85) {
