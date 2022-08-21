@@ -14,8 +14,8 @@
         let WindowWidth = $(window).width();
         let MapCoordinateX = 1000;
         let MapCoordinateY = 1000;
-        let PlayerXSize = 50;
-        let PlayerYSize = 50;
+        let PlayerXSize = 100;
+        let PlayerYSize = 100;
         let MapSizeX = 10000;
         let MapSizeY = 10000;
         let XOffset = WindowWidth / 2;
@@ -34,6 +34,14 @@
         let CoordinateX;
         let CoordinateY;
         let CoordinateSize = 1000;
+        let PlayerObject = {
+            AllowMovement: {
+                Upward: true,
+                Downward: true,
+                Left: true,
+                Right: true
+            }
+        }
 
         let MapPlacement = [
             [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
@@ -62,10 +70,10 @@
 
         function GameFrame() {
             GameMap.src = '/images/Map.png';
+            CheckMovement();
             RenderMapObjects();
             RenderObjects();
-            FindCoordinate();
-            $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}`);
+            $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}, ${PlayerObject.AllowMovement.Right}`);
             window.requestAnimationFrame(GameFrame);
         }
 
@@ -122,9 +130,9 @@
         GameMap.src = '/images/Map.png';
 
         function RenderMapObjects() {
-            for (y = 0; y < 10000; y += 1000) {
-                for (x = 0; x < 10000; x += 1000) {
-                    if (MapPlacement[y / 1000][x / 1000] == 1) {
+            for (y = 0; y < MapSizeY; y += CoordinateSize) {
+                for (x = 0; x < MapSizeX; x += CoordinateSize) {
+                    if (MapPlacement[y / CoordinateSize][x / CoordinateSize] == 1) {
                         game.fillStyle = "#128377";
                         game.fillRect(x - MapCoordinateX, y - MapCoordinateY, CoordinateSize, CoordinateSize);
                     }
@@ -160,9 +168,11 @@
 
         function CheckMovement() {
             FindCoordinate();
-            // if () {
-
-            // }
+            if (MapPlacement[CoordinateY][CoordinateX + 1] == 1) {
+                if ((PlayerCoordinateX % CoordinateSize) + (PlayerXSize * .4) >= CoordinateSize) {
+                    PlayerObject.AllowMovement.Right = false;
+                }
+            }
         }
 
         function Move(Direction) {
