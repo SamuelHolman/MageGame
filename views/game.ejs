@@ -14,8 +14,8 @@
         let WindowWidth = $(window).width();
         let MapCoordinateX = 1000;
         let MapCoordinateY = 1000;
-        let PlayerXSize = 100;
-        let PlayerYSize = 100;
+        let PlayerXSize = 200;
+        let PlayerYSize = 200;
         let MapSizeX = 10000;
         let MapSizeY = 10000;
         let XOffset = WindowWidth / 2;
@@ -42,6 +42,8 @@
                 Right: true
             }
         }
+        let FPS = 1;
+        let Seconds = 1;
 
         let MapPlacement = [
             [0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
@@ -74,7 +76,19 @@
             RenderMapObjects();
             RenderObjects();
             $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}, ${PlayerObject.AllowMovement.Right}`);
+            FPS++;
+            $("#info").text(`FPS: ${Math.round(FPS / Seconds)}, Seconds: ${Seconds}, Frames: ${FPS}`);
             window.requestAnimationFrame(GameFrame);
+        }
+
+        setInterval(FPSCounter, 1000);
+
+        function FPSCounter() {
+            if (Seconds >= 10) {
+                Seconds = 0;
+                FPS = 1;
+            }
+            Seconds++;
         }
 
         let PlayerStaticAnimation = true;
@@ -103,18 +117,17 @@
         }
 
         Player.onload = function () {
-            // game.drawImage(Player, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
             if (PlayerStaticAnimation) {
                 if (IsPlayerMoving) {
-                    game.drawImage(Player, 0, 0, 125, 250, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                    game.drawImage(Player, 0, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 } else {
-                    game.drawImage(Player, 0, 0, 250, 125, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                    game.drawImage(Player, 250, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 }
             } else if (!PlayerStaticAnimation) {
                 if (IsPlayerMoving) {
-                    game.drawImage(Player, 125, 0, 125, 250, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                    game.drawImage(Player, 250, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 } else {
-                    game.drawImage(Player, 0, 125, 250, 125, WindowWidth / 2 - 50, WindowHeight / 2 - 50, 100, 100);
+                    game.drawImage(Player, 0, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 }
             }
         }
@@ -141,7 +154,7 @@
         }
 
         function RenderObjects() {
-            Player.src = '/images/TestCharacters/LongLegs/LongLeggedUp.png';
+            Player.src = '/images/Robots/Water/Medium.png';
             Kaiju.src = '/images/PlanetSnail.png';
 
             game.fillStyle = "#123456";
