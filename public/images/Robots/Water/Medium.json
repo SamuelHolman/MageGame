@@ -1,1 +1,1 @@
-{"frames": [{"filename": 0, "frame": {"x": 0, "y": 0, "w": 250, "h": 250}}, {"filename": 1, "frame": {"x": 250, "y": 0, "w": 250, "h": 250}}]}
+{"frames": [{"filename": 0, "frame": {"x": 0, "y": 0, "w": 250, "h": 250}}, {"filename": 1, "frame": {"x": 250, "y": 0, "w": 250, "h": 250}}, {"filename": 2, "frame": {"x": 0, "y": 250, "w": 250, "h": 250}}, {"filename": 3, "frame": {"x": 250, "y": 250, "w": 250, "h": 250}}]}

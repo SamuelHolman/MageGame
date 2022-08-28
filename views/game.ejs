@@ -75,9 +75,9 @@
             CheckMovement();
             RenderMapObjects();
             RenderObjects();
-            $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}, ${PlayerObject.AllowMovement.Right}`);
-            FPS++;
-            $("#info").text(`FPS: ${Math.round(FPS / Seconds)}, Seconds: ${Seconds}, Frames: ${FPS}`);
+            // $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}, ${PlayerObject.AllowMovement.Right}`);
+            // FPS++;
+            // $("#info").text(`FPS: ${Math.round(FPS / Seconds)}, Seconds: ${Seconds}, Frames: ${FPS}`);
             window.requestAnimationFrame(GameFrame);
         }
 
@@ -119,15 +119,15 @@
         Player.onload = function () {
             if (PlayerStaticAnimation) {
                 if (IsPlayerMoving) {
-                    game.drawImage(Player, 0, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
+                    game.drawImage(Player, 0, 0, 250, 249, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 } else {
-                    game.drawImage(Player, 250, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
+                    game.drawImage(Player, 0, 250, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 }
             } else if (!PlayerStaticAnimation) {
                 if (IsPlayerMoving) {
                     game.drawImage(Player, 250, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 } else {
-                    game.drawImage(Player, 0, 0, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
+                    game.drawImage(Player, 250, 250, 250, 250, WindowWidth / 2 - PlayerXSize / 2, WindowHeight / 2 - PlayerYSize / 2, PlayerXSize, PlayerYSize);
                 }
             }
         }
