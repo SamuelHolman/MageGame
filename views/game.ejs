@@ -6,7 +6,7 @@
     <% include ./partials/navbar %>
     <% include ./partials/scripts %>
 
-    <p class="topleft" id="info"></p>
+    <p class="topleft" id="info" style="float:right;"></p>
     <canvas id="GameArea"></canvas>
 
     <script>
@@ -75,9 +75,10 @@
             CheckMovement();
             RenderMapObjects();
             RenderObjects();
+            LightningRender();
             // $("#info").text(`X: ${CoordinateX}, Y: ${CoordinateY}, ${PlayerObject.AllowMovement.Right}`);
             // FPS++;
-            // $("#info").text(`FPS: ${Math.round(FPS / Seconds)}, Seconds: ${Seconds}, Frames: ${FPS}`);
+            $("#info").text(`Height: ${WindowHeight}, Width: ${WindowWidth}`);
             window.requestAnimationFrame(GameFrame);
         }
 
@@ -97,6 +98,49 @@
         function PlayerAnimate() {
             PlayerStaticAnimation = !PlayerStaticAnimation;
         }
+
+        let AnimationFrames = true;
+        AnimationFrames = setInterval(Lightning, 16);
+        let LightningShrink = 40;
+        let LightningGrow = 0;
+        
+        function Lightning() {
+            LightningShrink -= 1;
+            if (LightningShrink < 0) {
+                LightningShrink = 40;
+            }
+        }
+
+        let LightningScoot = true;
+        LightningScoot = setInterval(LightningSlow, 200);
+
+        function LightningSlow() {
+            LightningGrow += 1;
+            if (LightningGrow > 100) {
+                LightningGrow = 0;
+            }
+        }
+
+        function LightningRender() {
+            game.fillStyle = "#FFFFFF";
+            // for (i = 500000; i < 1000000; i += 100000) {
+            let LightningArray = [];
+            for (i = 0; i <= 720; i += .2) {
+                // game.fillRect((100000 * Lightning) / i, i, 5, 5);
+                // game.fillRect(i, Math.sqrt(100000 - Lightning * i ** 2) + 19 * Math.sin(.03 * i), 5, 5);
+                game.fillRect(i + WindowWidth / 2, 50 * Math.sin(.03 * i + LightningGrow * 16) + (WindowHeight / 2), 5, 5);
+                game.fillRect(i + WindowWidth / 2, 50 * Math.sin(.03 * i + (LightningGrow + 1.5) * 16) + (WindowHeight / 2), 5, 5);
+                game.fillRect(i + WindowWidth / 2, 50 * Math.sin(.03 * i + (LightningGrow + 2.63) * 16) + (WindowHeight / 2), 5, 5);
+                // game.fillRect(i + WindowWidth / 2, Math.sqrt(10000 / LightningShrink - (.01929 * (1 / LightningShrink) * i ** 2))  + (50 * Math.sin(.03 * i + LightningGrow * 16)) + (WindowHeight / 2), 5, 5);
+            }
+            // }
+        }
+
+        //Math.sqrt(10000 - (.01929 * i ** 2))
+        // + 50 * Math.sin(.03 * i + Lightning * 16)
+        // + ( 50 * (Math.random() - .5))
+        //TV static effect with this
+        //game.fillRect(i, Math.sqrt(100000 - .3 * i ** 2) + 19 * Math.sin(.03 * i + 1) + ( 50 * (Math.random() - .5)), 5, 5);
 
         function resize() {
             GameAreaSelector.width = window.innerWidth;
